@@ -1,0 +1,20 @@
+trajin prod10.mdcrd 1 200 1
+trajin prod20.mdcrd 1 200 1
+trajin prod30.mdcrd 1 200 1
+trajin prod40.mdcrd 1 200 1
+trajin prod50.mdcrd 1 200 1
+trajin prod60.mdcrd 1 200 1
+trajin prod70.mdcrd 1 200 1
+trajin prod80.mdcrd 1 200 1
+trajin prod90.mdcrd 1 200 1
+trajin prod100.mdcrd 1 200 1
+
+autoimage anchor :1-627
+center :1-627 mass origin
+center :1-866 mass origin
+image origin center familiar
+rms first out cpptraj/rmsd.txt :1-866@CA,C,O,N
+atomicfluct out cpptraj/rmsf.txt :1-866@CA,C,O,N byres
+trajout cpptraj/wt_prod_upto100.dcd
+go 
+exit

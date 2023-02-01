@@ -1,0 +1,42 @@
+for i in mut_*; do
+cd $i
+echo "\$AMBERHOME/bin/pmemd -O -i min_Protfix_100.in -p "${i#mut_}"_complex_solv.prmtop -c "${i#mut_}"_complex_solv.rst7 -r min_Protfix_100.rst -x min_Protfix_100.mdcrd -o min_Protfix_100.out -ref "${i#mut_}"_complex_solv.rst7 -inf min_Protfix_100.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd -O -i min_Protfix_50.in -p "${i#mut_}"_complex_solv.prmtop -c min_Protfix_100.rst -r min_Protfix_50.rst -x min_Protfix_50.mdcrd -o min_Protfix_50.out -ref min_Protfix_100.rst -inf min_Protfix_50.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd -O -i min_Protfix_5.in -p "${i#mut_}"_complex_solv.prmtop -c min_Protfix_50.rst -r min_Protfix_5.rst -x min_Protfix_5.mdcrd -o min_Protfix_5.out -ref min_Protfix_50.rst -inf min_Protfix_5.mdinfo" >> Graham_amberscript.sh 
+echo "\$AMBERHOME/bin/pmemd -O -i min_glycan_relaxed.in -p "${i#mut_}"_complex_solv.prmtop -c min_Protfix_5.rst -r min_glycan_relaxed.rst -x min_glycan_relaxed.mdcrd -o min_glycan_relaxed.out -ref min_Protfix_5.rst -inf min_glycan_relaxed.mdinfo" >> Graham_amberscript.sh 
+echo "\$AMBERHOME/bin/pmemd -O -i min_glycan_relaxed_1.in -p "${i#mut_}"_complex_solv.prmtop -c min_glycan_relaxed.rst -r min_glycan_relaxed_1.rst -x min_glycan_relaxed_1.mdcrd -o min_glycan_relaxed_1.out -ref min_glycan_relaxed.rst -inf min_glycan_relaxed_1.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd -O -i minimization.in -p "${i#mut_}"_complex_solv.prmtop -c min_glycan_relaxed_1.rst -r minimization.rst -x minimization.mdcrd -o minimization.out -ref min_glycan_relaxed_1.rst -inf minimization.mdinfo" >> Graham_amberscript.sh
+echo "ambpdb -p "${i#mut_}"_complex_solv.prmtop <minimization.rst> minimized.pdb" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i equilibration1.in -p "${i#mut_}"_complex_solv.prmtop -c minimization.rst -r eq1.rst -x eq1.mdcrd -o eq1.out -ref minimization.rst -inf eq1.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i equilibration2.in -p "${i#mut_}"_complex_solv.prmtop -c eq1.rst -r eq2.rst -x eq2.mdcrd -o eq2.out -ref eq1.rst -inf eq2.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i equilibration2A.in -p "${i#mut_}"_complex_solv.prmtop -c eq2.rst -r eq2A.rst -x eq2A.mdcrd -o eq2A.out -ref eq2.rst -inf eq2A.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i equilibration3.in -p "${i#mut_}"_complex_solv.prmtop -c eq2A.rst -r eq3.rst -x eq3.mdcrd -o eq3.out -ref eq2A.rst -inf eq3.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i equilibration4.in -p "${i#mut_}"_complex_solv.prmtop -c eq3.rst -r eq4.rst -x eq4.mdcrd -o eq4.out -ref eq3.rst -inf eq4.mdinfo" >> Graham_amberscript.sh
+echo "ambpdb -p comp.top <eq4.rst> equilibrated.pdb" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i pre_production.in -p "${i#mut_}"_complex_solv.prmtop -c eq4.rst -r pre_production.rst -x pre_production.mdcrd -o pre_production.out -ref eq4.rst -inf pre_production.mdinfo" >> Graham_amberscript.sh
+echo "ambpdb -p "${i#mut_}"_complex_solv.prmtop <pre_production.rst> pre_production.pdb" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod10.in -p "${i#mut_}"_complex_solv.prmtop -c pre_production.rst -r prod10.rst -x prod10.mdcrd -o prod10.out -ref pre_production.rst -inf prod10.mdinfo" >> Graham_amberscript.sh
+echo "ambpdb -p "${i#mut_}"_complex_solv.prmtop <prod10.rst> post_prod10.pdb" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod20.in -p "${i#mut_}"_complex_solv.prmtop -c prod10.rst -r prod20.rst -x prod20.mdcrd -o prod20.out -ref prod10.rst -inf prod20.mdinfo" >> Graham_amberscript.sh
+echo "ambpdb -p "${i#mut_}"_complex_solv.prmtop <prod20.rst> post_prod20.pdb" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod30.in -p "${i#mut_}"_complex_solv.prmtop -c prod20.rst -r prod30.rst -x prod30.mdcrd -o prod30.out -ref prod20.rst -inf prod30.mdinfo" >> Graham_amberscript.sh
+echo "ambpdb -p "${i#mut_}"_complex_solv.prmtop <prod30.rst> post_prod30.pdb" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod40.in -p "${i#mut_}"_complex_solv.prmtop -c prod30.rst -r prod40.rst -x prod40.mdcrd -o prod40.out -ref prod30.rst -inf prod40.mdinfo" >> Graham_amberscript.sh
+echo "ambpdb -p "${i#mut_}"_complex_solv.prmtop <prod40.rst> post_prod40.pdb" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod50.in -p "${i#mut_}"_complex_solv.prmtop -c prod40.rst -r prod50.rst -x prod50.mdcrd -o prod50.out -ref prod40.rst -inf prod50.mdinfo" >> Graham_amberscript.sh
+echo "ambpdb -p "${i#mut_}"_complex_solv.prmtop <prod50.rst> post_prod50.pdb" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod60.in -p "${i#mut_}"_complex_solv.prmtop -c prod50.rst -r prod60.rst -x prod60.mdcrd -o prod60.out -ref prod50.rst -inf prod60.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod70.in -p "${i#mut_}"_complex_solv.prmtop -c prod60.rst -r prod70.rst -x prod70.mdcrd -o prod70.out -ref prod60.rst -inf prod70.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod80.in -p "${i#mut_}"_complex_solv.prmtop -c prod70.rst -r prod80.rst -x prod80.mdcrd -o prod80.out -ref prod70.rst -inf prod80.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod90.in -p "${i#mut_}"_complex_solv.prmtop -c prod80.rst -r prod90.rst -x prod90.mdcrd -o prod90.out -ref prod80.rst -inf prod90.mdinfo" >> Graham_amberscript.sh
+echo "\$AMBERHOME/bin/pmemd.cuda -O -i prod100.in -p "${i#mut_}"_complex_solv.prmtop -c prod90.rst -r prod100.rst -x prod100.mdcrd -o prod100.out -ref prod90.rst -inf prod100.mdinfo" >> Graham_amberscript.sh
+cd ..;
+done
+
+
+
+
+
+
+
+
